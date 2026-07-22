@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -204,8 +204,6 @@
   .peg-orange { background: #e67e22; }
   .peg-cyan { background: #1abc9c; }
   .peg-pink { background: #fd79a8; }
-
-  /* Leaderboard */
   .lb-title {
     text-align: center;
     font-size: 17px;
@@ -274,8 +272,6 @@
     cursor: pointer;
     opacity: 0.6;
   }
-
-  /* Modal */
   .modal-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -311,8 +307,6 @@
   }
   .modal-box input:focus { border-color: #3498db; }
   .modal-box .btn { width: 100%; }
-
-  /* Share button */
   .share-area {
     margin-top: 10px;
     text-align: center;
@@ -329,7 +323,6 @@
     user-select: none;
   }
   .share-btn:active { transform: scale(0.96); }
-
   @media (min-width: 700px) {
     .wrapper { flex-direction: row; gap: 16px; }
     .game-panel { flex: 1; }
@@ -436,14 +429,7 @@
       const item = document.createElement('div');
       item.className = 'lb-item';
       const rc = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
-      item.innerHTML = `
-        <div class="lb-rank ${rc}">${i+1}</div>
-        <div class="lb-info">
-          <div class="lb-name">${escapeHtml(s.name)}</div>
-          <div class="lb-detail">${s.date}</div>
-        </div>
-        <div class="lb-score">${s.guesses}次</div>
-      `;
+      item.innerHTML = '<div class="lb-rank ' + rc + '">' + (i+1) + '</div><div class="lb-info"><div class="lb-name">' + escapeHtml(s.name) + '</div><div class="lb-detail">' + s.date + '</div></div><div class="lb-score">' + s.guesses + '次</div>';
       container.appendChild(item);
     });
   }
@@ -466,7 +452,7 @@
       const peg = document.createElement('div');
       peg.className = 'palette-peg ' + c.class + (i === 0 ? ' active' : '');
       peg.title = c.name;
-      peg.onclick = () => selectPalette(i);
+      peg.onclick = function() { selectPalette(i); };
       p.appendChild(peg);
     });
   }
@@ -517,7 +503,7 @@
       const peg = document.createElement('div');
       peg.className = 'peg';
       peg.id = 'g-'+guesses.length+'-'+i;
-      peg.onclick = () => setPeg(i);
+      peg.onclick = (function(pos) { return function() { setPeg(pos); }; })(i);
       gp.appendChild(peg);
     }
 
@@ -562,7 +548,7 @@
       document.getElementById('status').className = 'status win';
       document.getElementById('guessBtn').disabled = true;
       pendingScore = guesses.length;
-      document.getElementById('winMsg').textContent = `你在 ${guesses.length} 次内猜对了！`;
+      document.getElementById('winMsg').textContent = '你在 ' + guesses.length + ' 次内猜对了！';
       document.getElementById('playerName').value = '';
       document.getElementById('nameModal').classList.add('show');
       document.getElementById('playerName').focus();
@@ -580,7 +566,7 @@
 
     currentGuess = [null,null,null,null];
     addGuessRow();
-    document.getElementById('status').textContent = `第 ${guesses.length+1} 次猜测 — 继续加油！`;
+    document.getElementById('status').textContent = '第 ' + (guesses.length+1) + ' 次猜测 — 继续加油！';
     document.getElementById('status').className = 'status';
   }
 
@@ -589,14 +575,14 @@
     if (!name) {
       const inp = document.getElementById('playerName');
       inp.style.borderColor = '#e74c3c';
-      setTimeout(() => inp.style.borderColor = '#bdc3c7', 800);
+      setTimeout(function() { inp.style.borderColor = '#bdc3c7'; }, 800);
       return;
     }
     const scores = getScores();
     const now = new Date();
     const ds = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
-    scores.push({ name, guesses: pendingScore, date: ds });
-    scores.sort((a,b) => a.guesses - b.guesses);
+    scores.push({ name: name, guesses: pendingScore, date: ds });
+    scores.sort(function(a,b) { return a.guesses - b.guesses; });
     if (scores.length > 10) scores.length = 10;
     saveScores(scores);
     renderLeaderboard();
@@ -617,7 +603,7 @@
         if (guess[i] === secret[j]) { white++; su[j]=true; gu[i]=true; break; }
       }
     }
-    return { black, white };
+    return { black: black, white: white };
   }
 
   function renderFeedback(idx, fb) {
@@ -627,7 +613,7 @@
     for (let i = 0; i < fb.black; i++) pegs.push('fb-black');
     for (let i = 0; i < fb.white; i++) pegs.push('fb-white');
     while (pegs.length < PEGS_PER_ROW) pegs.push('fb-empty');
-    pegs.forEach(cls => {
+    pegs.forEach(function(cls) {
       const d = document.createElement('div');
       d.className = 'feedback-peg '+cls;
       c.appendChild(d);
@@ -640,7 +626,6 @@
     if (navigator.share) {
       navigator.share({ title: 'Mastermind 猜颜色', text: text, url: url });
     } else {
-      // Copy to clipboard fallback
       const ta = document.createElement('textarea');
       ta.value = text + ' ' + url;
       document.body.appendChild(ta);
