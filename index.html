@@ -202,8 +202,6 @@
   .peg-yellow { background: #f1c40f; }
   .peg-purple { background: #9b59b6; }
   .peg-orange { background: #e67e22; }
-  .peg-cyan { background: #1abc9c; }
-  .peg-pink { background: #fd79a8; }
   .lb-title {
     text-align: center;
     font-size: 17px;
@@ -368,7 +366,7 @@
       </div>
 
       <div class="rules" style="margin-top:12px;">
-        <strong>规则：</strong>4个颜色秘密代码（可重复）。黑钉=位置颜色都对，白钉=颜色对位置错。10次机会！
+        <strong>规则：</strong>4个颜色秘密代码（可重复）。黑钉=位置颜色都对，白钉=颜色对位置错。10次机会！可选颜色：红、绿、蓝、黄、紫、橙。
       </div>
     </div>
 
@@ -384,15 +382,14 @@
   </div>
 
 <script>
+  // ========== 6色配置：红、蓝、绿、黄、紫、橙 ==========
   const COLORS = [
     { name: 'red', class: 'peg-red' },
     { name: 'blue', class: 'peg-blue' },
     { name: 'green', class: 'peg-green' },
     { name: 'yellow', class: 'peg-yellow' },
     { name: 'purple', class: 'peg-purple' },
-    { name: 'orange', class: 'peg-orange' },
-    { name: 'cyan', class: 'peg-cyan' },
-    { name: 'pink', class: 'peg-pink' }
+    { name: 'orange', class: 'peg-orange' }
   ];
   const PEGS_PER_ROW = 4;
   const MAX_GUESSES = 10;
